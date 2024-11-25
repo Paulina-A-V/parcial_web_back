@@ -8,14 +8,12 @@ import { TypeOrmTestingConfig } from '../shared/testing-utils/typeorm-testing-co
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker';
 
-
-
-
 describe('PacienteMedicoService', () => {
   let service: PacienteMedicoService;
   let pacienteRepository: Repository<PacienteEntity>;
   let medicoRepository: Repository<MedicoEntity>;
   let listaMedicos: MedicoEntity[] = [];
+  let listaPacientes: PacienteEntity[] = [];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -46,6 +44,19 @@ describe('PacienteMedicoService', () => {
       });
       listaMedicos.push(medico);
     }
+
+    listaPacientes = [];
+    for (let i = 0; i < 5; i++) {
+      const paciente: PacienteEntity = await pacienteRepository.save({
+        nombre: faker.lorem.word(),
+        genero: 'Femenino',
+        medicos: [],
+        diagnosticos: []
+      });
+      listaPacientes.push(paciente);
+    }
+
+
   };
 
   it('should be defined', () => {
@@ -81,15 +92,12 @@ describe('PacienteMedicoService', () => {
     }
   });
 
-  //NO FUNCIONA
-  it('addMedicoToPaciente should throw an exception when the medico is not found', async () => {
-    const paciente2: PacienteEntity = await pacienteRepository.save({
-      nombre: faker.lorem.word(),
-      genero: 'Femenino',
-    });
-
-    await expect(service.addMedicoToPaciente(paciente2.id, '1')).rejects.toThrow(
-      'Medico no encontrado.',
-    );
+  it('addMedicoToPaciente should throw an error when the paciente does not exist', async () => {
+    await expect(service.addMedicoToPaciente("0", listaMedicos[0].id)).rejects.toHaveProperty('message', 'Paciente no encontrado.');
   });
+
+  it('addMedicoToPaciente should throw an error when the medico does not exist', async () => {
+    await expect(service.addMedicoToPaciente(listaPacientes[0].id, "0")).rejects.toHaveProperty('message', 'Medico no encontrado.');
+  });
+
 });
