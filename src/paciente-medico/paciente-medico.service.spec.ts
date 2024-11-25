@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { PacienteMedicoService } from './paciente-medico.service';
 import { Repository } from 'typeorm';
@@ -5,7 +6,7 @@ import { PacienteEntity } from '../paciente/paciente.entity/paciente.entity';
 import { MedicoEntity } from '../medico/medico.entity/medico.entity';
 import { TypeOrmTestingConfig } from '../shared/testing-utils/typeorm-testing-config';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { fa, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 
 
@@ -35,11 +36,6 @@ describe('PacienteMedicoService', () => {
   const seedDatabase = async () => {
     pacienteRepository.clear();
     medicoRepository.clear();
-
-    const paciente = await pacienteRepository.save({
-      nombre: faker.lorem.word(),
-      genero: 'Masculino',
-    });
 
     listaMedicos = [];
     for (let i = 1; i < 6; i++) {

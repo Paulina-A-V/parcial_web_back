@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
 import { DiagnosticoService } from './diagnostico.service';
 import { Repository } from 'typeorm';
